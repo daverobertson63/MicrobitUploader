@@ -20,19 +20,26 @@ public static void  main(String[] args)
 
 	if ( args.length < 2 )
 	{
-		System.out.println("Needs two args");
+		System.out.println("Needs two args - [file.py] [microbit drive]");
 		return;
 	
 	}
 	
 	try{
-	      String executionPath = System.getProperty("user.dir");
-	      System.out.print("Executing at =>"+executionPath.replace("\\", "/"));
+		  File path = new File(MicrobitUploader.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
+		  String executionPath = path.getParent();
+	      //String executionPath = System.getProperty("user.dir");
+	      System.out.println("Executing at =>"+executionPath.replace("\\", "/"));
 	      
-	      File f = new File("firmwaremaster.hex");
+	      
+	      File f = new File(executionPath + File.separator+ "firmwaremaster.hex");
+	      
+	      System.out.println(f.getAbsolutePath());
+	      
+	      
 	      if(f.exists() && !f.isDirectory()) { 
 	          // do the conversion and copy over
-	    	  FirmwareGenerator fg = new FirmwareGenerator("firmwaremaster.hex",args[0]);
+	    	  FirmwareGenerator fg = new FirmwareGenerator(executionPath + File.separator+ "firmwaremaster.hex",args[0]);
 	    	  // This should create a new file called firmware.hex
 	    	  fg.createMicrobitFirmware();
 	    	  
@@ -46,6 +53,10 @@ public static void  main(String[] args)
 	    	      System.out.println("Microbit updated!");
 	    	  }
 	    	  
+	      }
+	      else
+	      {
+	    	    System.out.println("firmwaremaster.hex is missing");
 	      }
 	      
 	    }catch (Exception e){
